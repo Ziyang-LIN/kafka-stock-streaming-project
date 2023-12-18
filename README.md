@@ -7,7 +7,7 @@ This project builds an end-to-end ETL pipeline for real-time stock data processi
 
 ## Project Architecture 
 
-<img src="assets/architecture.jpg">
+<img src="assets/architecture.png">
 
 ## Technology Used
 
