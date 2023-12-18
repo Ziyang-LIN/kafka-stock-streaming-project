@@ -1,0 +1,27 @@
+# Download and install Apache Kafka
+wget https://archive.apache.org/dist/kafka/3.0.0/kafka_2.13-3.0.0.tgz
+tar xzf kafka_2.13-3.0.0.tgz
+mv kafka_2.13-3.0.0 ~
+
+# Download Java
+sudo yum install java-1.8.0-amazon-corretto.x86_64
+java -version
+
+# Start ZooKeeper
+cd kafka_2.13-3.0.0
+bin/zookeeper-server-start.sh config/zookeeper.properties
+
+# Now open a new terminal window, connect to EC2, and start a Kafka serve after memory configuration
+ssh -i "kafka-stock-streaming-project.pem" ec2-user@ec2-3-20-222-206.us-east-2.compute.amazonaws.com
+export KAFKA_HEAP_OPTS="-Xmx256M -Xms128M"
+cd kafka_2.13-3.0.0
+bin/kafka-server-start.sh config/server.properties
+
+# Change Kafka's running IP to the EC2 public IP
+sudo nano config/server.properties
+
+# Create topic named "test1", and start a Kafka Consumer and a Kafka Producer under this topic
+cd kafka_2.13-3.0.0
+bin/kafka-topics.sh --create --topic test1 --bootstrap-server 3.20.222.206:9092 --replication-factor 1 --partitions 1
+bin/kafka-console-producer.sh --topic test1 --bootstrap-server 3.20.222.206:9092
+bin/kafka-console-consumer.sh --topic test1 --bootstrap-server 3.20.222.206:9092
